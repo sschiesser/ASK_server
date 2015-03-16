@@ -368,7 +368,7 @@ void threadedSerial::draw()
             
             ofPushMatrix();
             ofTranslate(320., 125., 0);
-            ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], angleAxis[2], -angleAxis[3]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
+            ofRotate( angleAxis[0] * RAD_TO_DEG, -angleAxis[3], -angleAxis[2], -angleAxis[1]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
             ofScale(30., 10., 60.);
             drawCube();
             ofSetColor(255, 127, 0);
@@ -382,12 +382,12 @@ void threadedSerial::draw()
 
 void threadedSerial::eulerToAngleAxis()
 {
-    double c1 = cos(ypr[0] / 2);
-    double c2 = cos(ypr[1] / 2);
-    double c3 = cos(ypr[2] / 2);
-    double s1 = sin(ypr[0] / 2);
-    double s2 = sin(ypr[1] / 2);
-    double s3 = sin(ypr[2] / 2);
+    double c1 = cos(ypr[2] / 2);
+    double c2 = cos(ypr[0] / 2);
+    double c3 = cos(ypr[1] / 2);
+    double s1 = sin(ypr[2] / 2);
+    double s2 = sin(ypr[0] / 2);
+    double s3 = sin(ypr[1] / 2);
     double x = (s1 * s2 * c3) + (c1 * c2 * s3);
     double y = (s1 * c2 * c3) + (c1 * s2 * s3);
     double z = (c1 * s2 * c3) - (s1 * c2 * s3);
