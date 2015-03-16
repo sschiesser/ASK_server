@@ -1,0 +1,33 @@
+5 bracelets MPU
+
+sensor 34.95 * 5 = 174.75
+arduino 9.95 * 5 = 49.75
+xbee 22.95 X 10 = 229.5
+xbee-explorer usb 24.95 X 5 = 124.75
+
+total 578.75
+
+
+
+1 Bracelet MPU
+sensor 34.95
+arduino 9.95
+xbee 22.95 x 2
+xbee-explorer usb 24.95
+total = 115.75
+
+
+
+Sparkfun parts: 
+
+9 Degrees of Freedom Breakout - MPU-9150
+SEN-11486
+
+Arduino Pro Mini 328 - 3.3V/8MHz
+DEV-11114
+
+XBee 1mW Trace Antenna - Series 1 (802.15.4)
+WRL-11215
+
+XBee Explorer USB
+WRL-11812

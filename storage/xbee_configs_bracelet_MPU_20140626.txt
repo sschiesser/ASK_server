@@ -1,0 +1,142 @@
+xbee config new MPU bracelet 20140626 jasch 
+
+
+pair one:
+series  xxx XB24 v 10E6
+
+ENDPOINT:
+CH 0x0C
+PAN ID 5001
+SH 13A200
+SL 40657753
+RR 3 (retries)
+CE 0 (end-device)
+BD 6 57600
+
+COORDINATOR:
+CH 0x0C
+PAN ID 5001
+SH 13A200
+SL 406576B8
+RR 3 (retries)
+CE 0 (end-device)
+BD 6 57600
+
+pair two:
+series  s1 XB24 v 10E6
+
+ENDPOINT:
+CH 0x0E
+PAN ID 5002
+SH 13A200
+SL 40657F61
+RR 3 (retries)
+CE 0 (end-device)
+BD 6 57600
+
+COORDINATOR:
+CH 0x0E
+PAN ID 5002
+SH 13A200
+SL 40638908
+RR 3 (retries)
+CE 1 (coordinator)
+BD 6 57600
+
+pair three:
+series  s1 XB24 v 10E6
+
+ENDPOINT:
+CH 0x10
+PAN ID 5003
+SH 13A200
+SL 406A6CD4
+RR 3 (retries)
+CE 0 (end-device)
+BD 6 57600
+
+COORDINATOR:
+CH 0x10
+PAN ID 5003
+SH 13A200
+SL 406388EA
+RR 3 (retries)
+CE 1 (coordinator)
+BD 6 57600
+
+pair four:
+series  s1 XB24 v 10E6
+
+ENDPOINT:
+CH 0x13
+PAN ID 5004
+SH 13A200
+SL 406A7672
+RR 3 (retries)
+CE 0 (end-device)
+BD 6 57600
+
+COORDINATOR:
+CH 0x13
+PAN ID 5004
+SH 13A200
+SL 406A7728
+RR 3 (retries)
+CE 1 (coordinator)
+BD 6 57600
+
+
+pair five:
+series  s1 XB24 v 10E6
+
+ENDPOINT:
+CH 0x15
+PAN ID 5005
+SH 13A200
+SL 4063893F
+RR 3 (retries)
+CE 0 (end-device)
+BD 6 57600
+
+COORDINATOR:
+CH 0x15
+PAN ID 5005
+SH 13A200
+SL 406A76E
+RR 3 (retries)
+CE 1 (coordinator)
+BD 6 57600
+
+
+
+
+
+
+
+channels
+12 	0x0C 	2.410GHz 	0x0002 	Overlaps Ch 1 	(1)
+
+13 	0x0D 	2.415GHz 	0x0004 	Overlaps Ch 1 	
+
+14 	0x0E 	2.420GHz 	0x0008 	Overlaps Ch 1 	(2)
+
+15 	0x0F 	2.425GHz 	0x0010 	Overlaps Ch 6 	
+
+16 	0x10 	2.430GHz 	0x0020 	Overlaps Ch 6 	(3)
+
+17 	0x11 	2.435GHz 	0x0040 	Overlaps Ch 6 	
+
+18 	0x12 	2.440GHz 	0x0080 	Overlaps Ch 6 
+
+19 	0x13 	2.445GHz 	0x0100 	Overlaps Ch 6 	(4)
+
+20 	0x14 	2.450GHz 	0x0200 	Overlaps Ch 11 	
+
+21 	0x15 	2.455GHz 	0x0400 	Overlaps Ch 11 	(5)
+
+22 	0x16 	2.460GHz 	0x0800 	Overlaps Ch 11 	
+
+23 	0x17 	2.465GHz 	0x1000 	Overlaps Ch 11	(6)
+
+
+

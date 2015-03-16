@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<ASKServer>
+    <baudrate>57600</baudrate>
+    <!-- <baudrate>115200</baudrate> -->
+    <network>
+        <sender>
+            <IP>localhost</IP>
+            <port>30000</port>
+        </sender>
+    </network>
+    <mpu id="0">
+        <oscaddress>/icst/mpu/flat/1</oscaddress>
+    </mpu>
+    <mpu id="1">
+        <oscaddress>/icst/mpu/quat</oscaddress>
+    </mpu>
+    <mpu id="2">
+        <oscaddress>/icst/mpu/accel</oscaddress>
+    </mpu>
+    <mpu id="3">
+        <oscaddress>/icst/mpu/gyro</oscaddress>
+    </mpu>
+    <mpu id="4">
+        <oscaddress>/icst/mpu/accelSum</oscaddress>
+    </mpu>
+    <mpu id="5">
+        <oscaddress>/icst/mpu/gyroSum</oscaddress>
+    </mpu>
+    <mpu id="6">
+        <oscaddress>/icst/mpu/euler</oscaddress>
+    </mpu>
+    <mpu id="7">
+        <oscaddress>/icst/mpu/ypr</oscaddress>
+    </mpu>
+    <thumbs id="1">
+        <oscaddress>/icst/thumbs/flat/1</oscaddress>
+    </thumbs>
+    <thumbs id="2">
+        <oscaddress>/icst/thumbs/slider</oscaddress>
+    </thumbs>
+    <display>0</display>
+    <serialport>/dev/tty.Bluetooth-Incoming-Port</serialport>
+</ASKServer>

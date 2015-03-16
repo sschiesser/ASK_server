@@ -1,0 +1,24 @@
+/* can be non-normalised quaternion */
+
+double sqw = w*w;
+double sqx = x*x;
+double sqy = y*y;
+double sqz = z*z;
+double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+double test = x*y + z*w;
+
+if (test > 0.499 * unit) { // singularity at north pole
+    heading = 2 * atan2(x,w);
+    attitude = PI/2;
+    bank = 0;
+    return;
+}else if (test < -0.499 * unit) { // singularity at south pole
+    heading = -2 * atan2(x,w);
+    attitude = -PI/2;
+    bank = 0;
+    return;
+} else {
+    heading = atan2(2*y*w - 2*x*z , sqx - sqy - sqz + sqw);
+    attitude = asin( 2 * test / unit);
+    bank = atan2(2*x*w - 2*y*z , -sqx + sqy - sqz + sqw)
+}
