@@ -108,43 +108,43 @@ void threadedSerial::parsePacket()
     if(haveInput) {
 //        printf("Packet received\n");
         
-//        quatRaw[0] = ( input[0] << 8 ) | input[1];
-//        quatRaw[1] = ( input[2] << 8 ) | input[3];
-//        quatRaw[2] = ( input[4] << 8 ) | input[5];
-//        quatRaw[3] = ( input[6] << 8 ) | input[7];
+        quatRaw[0] = ( input[0] << 8 ) | input[1];
+        quatRaw[1] = ( input[2] << 8 ) | input[3];
+        quatRaw[2] = ( input[4] << 8 ) | input[5];
+        quatRaw[3] = ( input[6] << 8 ) | input[7];
         
 //        quatRaw[0] = ( (input[0] << 24) | (input[1] << 16) | (input[2] << 8) | input[3] );
 //        quatRaw[1] = ( (input[4] << 24) | (input[5] << 16) | (input[6] << 8) | input[7] );
 //        quatRaw[2] = ( (input[8] << 24) | (input[9] << 16) | (input[10] << 8) | input[11] );
 //        quatRaw[3] = ( (input[12] << 24) | (input[13] << 16) | (input[14] << 8) | input[15] );
         
-        f2b.b[3] = input[0];
-        f2b.b[2] = input[1];
-        f2b.b[1] = input[2];
-        f2b.b[0] = input[3];
-        ypr[0] = f2b.f;
-
-        f2b.b[3] = input[4];
-        f2b.b[2] = input[5];
-        f2b.b[1] = input[6];
-        f2b.b[0] = input[7];
-        ypr[1] = f2b.f;
-
-        f2b.b[3] = input[8];
-        f2b.b[2] = input[9];
-        f2b.b[1] = input[10];
-        f2b.b[0] = input[11];
-        ypr[2] = f2b.f;
-        printf("Pose: x%f, y%f, z%f\n", ypr[0], ypr[1], ypr[2]);
+//        f2b.b[3] = input[0];
+//        f2b.b[2] = input[1];
+//        f2b.b[1] = input[2];
+//        f2b.b[0] = input[3];
+//        ypr[0] = f2b.f;
+//
+//        f2b.b[3] = input[4];
+//        f2b.b[2] = input[5];
+//        f2b.b[1] = input[6];
+//        f2b.b[0] = input[7];
+//        ypr[1] = f2b.f;
+//
+//        f2b.b[3] = input[8];
+//        f2b.b[2] = input[9];
+//        f2b.b[1] = input[10];
+//        f2b.b[0] = input[11];
+//        ypr[2] = f2b.f;
+//        printf("Pose: x%f, y%f, z%f\n", ypr[0], ypr[1], ypr[2]);
 
     
-//        accelRaw[0] = ( input[8] << 8 ) | input[9];
-//        accelRaw[1] = ( input[10] << 8 ) | input[11];
-//        accelRaw[2] = ( input[12] << 8 ) | input[13];
+        accelRaw[0] = ( input[8] << 8 ) | input[9];
+        accelRaw[1] = ( input[10] << 8 ) | input[11];
+        accelRaw[2] = ( input[12] << 8 ) | input[13];
         
-//        gyroRaw[0] = ( input[14] << 8 ) | input[15];
-//        gyroRaw[1] = ( input[16] << 8 ) | input[17];
-//        gyroRaw[2] = ( input[18] << 8 ) | input[19];
+        gyroRaw[0] = ( input[14] << 8 ) | input[15];
+        gyroRaw[1] = ( input[16] << 8 ) | input[17];
+        gyroRaw[2] = ( input[18] << 8 ) | input[19];
         
         sliderRaw = (input[20] << 8) | input[21];
         joystickRaw[0] = (input[22] << 8) | input[23]; // X (horizontal)
@@ -153,16 +153,16 @@ void threadedSerial::parsePacket()
         trackballRaw[1] = input[27]; // Y (vertical)
         trackballRaw[2] = input[28]; // button (binary)
     
-//        quaternion[0] = quatRaw[0] / 16384.0;
+        quaternion[0] = quatRaw[0] / 16384.0;
 //        quaternion[0] = quatRaw[0] / 1073741824.0;
-//        if (quaternion[0] >= 2.0) { quaternion[0] = quaternion[0] - 4.0f; }
-//        quaternion[1] = quatRaw[1] / 16384.0;
+        if (quaternion[0] >= 2.0) { quaternion[0] = quaternion[0] - 4.0f; }
+        quaternion[1] = quatRaw[1] / 16384.0;
 //        quaternion[1] = quatRaw[1] / 1073741824.0;
-//        if (quaternion[1] >= 2.0) { quaternion[1] = quaternion[1] - 4.0f; }
-//        quaternion[2] = quatRaw[2] / 16384.0;
+        if (quaternion[1] >= 2.0) { quaternion[1] = quaternion[1] - 4.0f; }
+        quaternion[2] = quatRaw[2] / 16384.0;
 //        quaternion[2] = quatRaw[2] / 1073741824.0;
-//        if (quaternion[2] >= 2.0) { quaternion[2] = quaternion[2] - 4.0f; }
-//        quaternion[3] = quatRaw[3] / 16384.0;
+        if (quaternion[2] >= 2.0) { quaternion[2] = quaternion[2] - 4.0f; }
+        quaternion[3] = quatRaw[3] / 16384.0;
 //        quaternion[3] = quatRaw[3] / 1073741824.0;
 //        if (quaternion[3] >= 2.0) { quaternion[3] = quaternion[3] - 4.0f; }
 //        printf("Quaternions:\nRAW %ld - %ld - %ld - %ld\nFLOAT %f - %f - %f - %f\n", quatRaw[0], quatRaw[1], quatRaw[2], quatRaw[3], quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
@@ -186,9 +186,9 @@ void threadedSerial::parsePacket()
         summedIMU[0] = (fabs(accel[0] - 0.5) + fabs(accel[1] - 0.5) + fabs(accel[2] - 0.5) ) * 0.66666666666666666666;
         summedIMU[1] = (fabs(gyro[0] - 0.5) + fabs(gyro[1] - 0.5) + fabs(gyro[2] - 0.5) ) * 0.66666666666666666666;
     
-//        quatToEuler();
-//        quatToAngleAxis();
-        eulerToAngleAxis();
+        quatToEuler();
+        quatToAngleAxis();
+//        eulerToAngleAxis();
         
         slider = sliderRaw / 1024.0f;
         joystick[0] = (joystickRaw[0]) / 1024.0f;
@@ -368,7 +368,7 @@ void threadedSerial::draw()
             
             ofPushMatrix();
             ofTranslate(320., 125., 0);
-            ofRotate( angleAxis[0] * RAD_TO_DEG, -angleAxis[3], -angleAxis[2], -angleAxis[1]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
+            ofRotate( angleAxis[0] * RAD_TO_DEG, -angleAxis[1], angleAxis[3], angleAxis[2]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
             ofScale(30., 10., 60.);
             drawCube();
             ofSetColor(255, 127, 0);
