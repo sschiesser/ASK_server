@@ -51,6 +51,6 @@
     <system id="1">
         <oscaddress>/icst/system/systime</oscaddress>
     </system>
-    <serialport>/dev/tty.usbserial-DA01AFB8</serialport>
     <display>0</display>
+    <serialport>/dev/tty.usbserial-DA01AFB8</serialport>
 </ASKServer>

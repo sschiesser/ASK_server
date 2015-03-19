@@ -355,70 +355,68 @@ void threadedSerial::sendOSC()
 
 void threadedSerial::draw()
 {
-	double x1 = 10;
-	double yy = 74;
-    double y1 = 37;
-    double y2 = 53;
-    double y3 = 69;
+	double x1 = 10; // left border for left sliders
+    double x2 = x1 + 110; // left border for right sliders
+	double yy = 74; // top border for text display
+    double y1 = 37; // top border for top sliders (x)
+    double y2 = 53; // top border for middle sliders (y)
+    double y3 = 69; // top border for bottom sliders (z)
     double accelScale = 0.25;
     double gyroScale = 0.02;
 	
 	if( lock() ) {
 		if (status == 1) {
 
+            // text display
             ofSetColor(0, 0, 0, 255);
             TTF.drawString( "quaternion " + ofToString( quaternion[0], 6) + " " + ofToString( quaternion[1], 6) + " " +  ofToString( quaternion[2], 6) + " " +  ofToString( quaternion[3], 6), x1, yy);
-            TTF.drawString( "accel " + ofToString( accel[0], 6) + " " + ofToString( accel[1], 6) + " " + ofToString( accel[2], 6), x1, yy + 16);
-            TTF.drawString(  "gyro   " +  ofToString( gyro[0], 6) + " " + ofToString( gyro[1], 6) + " " + ofToString( gyro[2], 6), x1, yy + 32);
-            
-            
+            TTF.drawString( "accel " + ofToString( accel[0], 5) + " " + ofToString( accel[1], 5) + " " + ofToString( accel[2], 5), x1, yy + 16);
+            TTF.drawString(  "gyro   " +  ofToString( gyro[0], 5) + " " + ofToString( gyro[1], 5) + " " + ofToString( gyro[2], 5), x1, yy + 32);
             TTF.drawString( "euler " + ofToString( euler[0] * RAD_TO_DEG ) + " " + ofToString( euler[1] * RAD_TO_DEG )+ " " + ofToString( euler[2] * RAD_TO_DEG ), x1 + 200, yy + 16);
             TTF.drawString( "ypr " + ofToString( ypr[0] * RAD_TO_DEG ) + " " + ofToString( ypr[1] * RAD_TO_DEG ) + " " + ofToString( ypr[2] * RAD_TO_DEG ), x1 + 200, yy + 32);
            
             ofPushMatrix();
             ofTranslate(0, 80);
             
-            ofNoFill();
+            // sliders for accel & gyro display
+            ofNoFill(); // rectangles
             ofSetColor(91, 91, 91, 255);
-            ofRect(10, y1, 104, 12);
-            ofRect(10, y2, 104, 12);
-            ofRect(10, y3, 104, 12);
+            ofRect(x1, y1, 104, 12); // accel x
+            ofRect(x1, y2, 104, 12); // accel y
+            ofRect(x1, y3, 104, 12); // accel z
+            ofRect(x2, y1, 104, 12); // gyro x
+            ofRect(x2, y2, 104, 12); // gyro y
+            ofRect(x2, y3, 104, 12); // gyro z
             
-            ofRect(120, y1, 104, 12);
-            ofRect(120, y2, 104, 12);
-            ofRect(120, y3, 104, 12);
-            
-            ofFill();
+            ofFill(); // cursors
             ofSetColor(0, 0, 0, 255);
             ofRect( x1 + (52 + (52 * accelScale * accel[0])), y1, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[1])), y2, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[2])), y3, 2, 12);
+            ofRect( x2 + (52 + (52 * gyroScale * gyro[0])), y1, 2, 12);
+            ofRect( x2 + (52 + (52 * gyroScale * gyro[1])), y2, 2, 12);
+            ofRect( x2 + (52 + (52 * gyroScale * gyro[2])), y3, 2, 12);
             
-            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[0])), y1, 2, 12);
-            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[1])), y2, 2, 12);
-            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[2])), y3, 2, 12);
-            
-            ofNoFill();
+            ofNoFill(); // middle lines
             ofSetColor(91, 91, 91, 255);
-            
             ofLine(x1 + 52, y1, x1 + 52, y1 + 11);
             ofLine(x1 + 52, y2, x1 + 52, y2 + 11);
             ofLine(x1 + 52, y3, x1 + 52, y3 + 11);
-            
-            ofLine(x1 + 162, y1, x1 + 162, y1 + 11);
-            ofLine(x1 + 162, y2, x1 + 162, y2 + 11);
-            ofLine(x1 + 162, y3, x1 + 162, y3 + 11);
+            ofLine(x2 + 52, y1, x2 + 52, y1 + 11);
+            ofLine(x2 + 52, y2, x2 + 52, y2 + 11);
+            ofLine(x2 + 52, y3, x2 + 52, y3 + 11);
             
             ofPopMatrix();
             
             ofPushMatrix();
-            ofTranslate(320., 125., 0);
-            //
+            ofTranslate(320., 140., 0); // set drawing center point for cube
+            
+            // cube
             ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]);
-            ofScale(30., 10., 60.);
+            ofScale(25., 5., 50.);
             drawCube();
             ofSetColor(255, 127, 0);
-            ofLine(0.0, 0.0, 0.0, 0.0, 0.0, -2.0);
+            ofLine(0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
             
             ofPopMatrix();
         }
@@ -465,29 +463,15 @@ void threadedSerial::quatToAngleAxis()
 
 void threadedSerial::quatToEuler()
 {
-
-//    // get quaternion from data packet
-//    quaternion[0] = ((packet[2] << 8) | packet[3]) / 16384.0f;
-//    quaternion[1] = ((packet[4] << 8) | packet[5]) / 16384.0f;
-//    quaternion[2] = ((packet[6] << 8) | packet[7]) / 16384.0f;
-//    quaternion[3] = ((packet[8] << 8) | packet[9]) / 16384.0f;
-    
     double gravity[3];
     double test = quaternion[1] * quaternion[2] + quaternion[3] * quaternion[0];
     
-//    for (int i = 0; i < 4; i++) {
-//        if (quaternion[i] >= 2) quaternion[i] = -4 + quaternion[i];
-//    }
-
     // calculate gravity vector
     gravity[0] = 2 * (quaternion[1] * quaternion[3] - quaternion[0] * quaternion[2]);
     gravity[1] = 2 * (quaternion[0] * quaternion[1] + quaternion[2] * quaternion[3]);
     gravity[2] = quaternion[0] * quaternion[0] - quaternion[1] * quaternion[1] - quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3];
 
     // calculate Euler angles
-//    euler[0] = atan2(2 * quaternion[1] * quaternion[2] - 2 * quaternion[0] * quaternion[3], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[1] * quaternion[1] - 1);
-//    euler[1] = -asin(2 * quaternion[1] * quaternion[3] + 2 * quaternion[0] * quaternion[2]);
-//    euler[2] = atan2(2 * quaternion[2] * quaternion[3] - 2 * quaternion[0] * quaternion[1], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[3] * quaternion[3] - 1);
     if(test > 0.499) {
         euler[0] = 2 * atan2(quaternion[1], quaternion[0]);
         euler[1] = PI * 0.5;
