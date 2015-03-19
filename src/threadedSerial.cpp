@@ -390,16 +390,10 @@ void threadedSerial::draw()
             
             ofFill();
             ofSetColor(0, 0, 0, 255);
-//            ofRect( x1 + (104 * accel[0]), y1, 2, 12);
-//            ofRect( x1 + (104 * accel[1]), y2, 2, 12);
-//            ofRect( x1 + (104 * accel[2]), y3, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[0])), y1, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[1])), y2, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[2])), y3, 2, 12);
             
-//            ofRect( x1 + 110 + (104 * gyro[0]), y1, 2, 12);
-//            ofRect( x1 + 110 + (104 * gyro[1]), y2, 2, 12);
-//            ofRect( x1 + 110 + (104 * gyro[2]), y3, 2, 12);
             ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[0])), y1, 2, 12);
             ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[1])), y2, 2, 12);
             ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[2])), y3, 2, 12);
@@ -420,7 +414,7 @@ void threadedSerial::draw()
             ofPushMatrix();
             ofTranslate(320., 125., 0);
             //
-            ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
+            ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]);
             ofScale(30., 10., 60.);
             drawCube();
             ofSetColor(255, 127, 0);
