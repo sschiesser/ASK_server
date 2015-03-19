@@ -90,8 +90,8 @@ void threadedSerial::serialparse(unsigned char *c)
 	// pattern matching... MPU frame
 	if (serialStream[0] == 60) { // packet start marker 'A'
         if(serialStream[1] == 191) {	// MPU sensor packet
-            if(serialStream[35] == 90) { // packet end marker 'Z'
-                for(i = 0; i < 34; i++) { // collect n-2 bytes into buffer
+            if(serialStream[59] == 90) { // packet end marker 'Z'
+                for(i = 0; i < 58; i++) { // collect n-2 bytes into buffer
                     input[i] = serialStream[i+2];
 //                    printf("input[%d] = %d\n", i, input[i]);
                 }
@@ -105,83 +105,127 @@ void threadedSerial::serialparse(unsigned char *c)
 
 void threadedSerial::parsePacket()
 {
+//    struct timeval tval_old, tval_new, tval_delta;
+    
     if(haveInput) {
-//        printf("Packet received\n");
+//        gettimeofday(&tval_new, NULL);
+//        printf("Packet received... %f\n", (float)(0.001*(float)tval_new.tv_usec));
         
-        quatRaw[0] = ( input[0] << 8 ) | input[1];
-        quatRaw[1] = ( input[2] << 8 ) | input[3];
-        quatRaw[2] = ( input[4] << 8 ) | input[5];
-        quatRaw[3] = ( input[6] << 8 ) | input[7];
+//        quatRaw[0] = ( input[0] << 8 ) | input[1];
+//        quatRaw[1] = ( input[2] << 8 ) | input[3];
+//        quatRaw[2] = ( input[4] << 8 ) | input[5];
+//        quatRaw[3] = ( input[6] << 8 ) | input[7];
         
 //        quatRaw[0] = ( (input[0] << 24) | (input[1] << 16) | (input[2] << 8) | input[3] );
 //        quatRaw[1] = ( (input[4] << 24) | (input[5] << 16) | (input[6] << 8) | input[7] );
 //        quatRaw[2] = ( (input[8] << 24) | (input[9] << 16) | (input[10] << 8) | input[11] );
 //        quatRaw[3] = ( (input[12] << 24) | (input[13] << 16) | (input[14] << 8) | input[15] );
         
-//        f2b.b[3] = input[0];
-//        f2b.b[2] = input[1];
-//        f2b.b[1] = input[2];
-//        f2b.b[0] = input[3];
-//        ypr[0] = f2b.f;
-//
-//        f2b.b[3] = input[4];
-//        f2b.b[2] = input[5];
-//        f2b.b[1] = input[6];
-//        f2b.b[0] = input[7];
-//        ypr[1] = f2b.f;
-//
-//        f2b.b[3] = input[8];
-//        f2b.b[2] = input[9];
-//        f2b.b[1] = input[10];
-//        f2b.b[0] = input[11];
-//        ypr[2] = f2b.f;
-//        printf("Pose: x%f, y%f, z%f\n", ypr[0], ypr[1], ypr[2]);
+        f2b.b[0] = input[0];
+        f2b.b[1] = input[1];
+        f2b.b[2] = input[2];
+        f2b.b[3] = input[3];
+        quaternion[0] = f2b.f;
+//        printf("Quat 1: in0 0x%x, in1 0x%x, in2 0x%x, in3 0x%x, float %f\n", input[0], input[1], input[2], input[3], quaternion[0]);
 
+        f2b.b[0] = input[4];
+        f2b.b[1] = input[5];
+        f2b.b[2] = input[6];
+        f2b.b[3] = input[7];
+        quaternion[1] = f2b.f;
+
+        f2b.b[0] = input[8];
+        f2b.b[1] = input[9];
+        f2b.b[2] = input[10];
+        f2b.b[3] = input[11];
+        quaternion[2] = f2b.f;
+
+        f2b.b[0] = input[12];
+        f2b.b[1] = input[13];
+        f2b.b[2] = input[14];
+        f2b.b[3] = input[15];
+        quaternion[3] = f2b.f;
+//        printf("Quat: w %f, x %f, y %f, z %f\n", quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
     
-        accelRaw[0] = ( input[8] << 8 ) | input[9];
-        accelRaw[1] = ( input[10] << 8 ) | input[11];
-        accelRaw[2] = ( input[12] << 8 ) | input[13];
+//        accelRaw[0] = ( input[8] << 8 ) | input[9];
+//        accelRaw[1] = ( input[10] << 8 ) | input[11];
+//        accelRaw[2] = ( input[12] << 8 ) | input[13];
         
-        gyroRaw[0] = ( input[14] << 8 ) | input[15];
-        gyroRaw[1] = ( input[16] << 8 ) | input[17];
-        gyroRaw[2] = ( input[18] << 8 ) | input[19];
+        f2b.b[0] = input[16];
+        f2b.b[1] = input[17];
+        f2b.b[2] = input[18];
+        f2b.b[3] = input[19];
+        accel[0] = f2b.f;
         
-        sliderRaw = (input[20] << 8) | input[21];
-        joystickRaw[0] = (input[22] << 8) | input[23]; // X (horizontal)
-        joystickRaw[1] = (input[24] << 8) | input[25]; // Y (vertical)
-        trackballRaw[0] = input[26]; // X (horizontal)
-        trackballRaw[1] = input[27]; // Y (vertical)
-        trackballRaw[2] = input[28]; // button (binary)
+        f2b.b[0] = input[20];
+        f2b.b[1] = input[21];
+        f2b.b[2] = input[22];
+        f2b.b[3] = input[23];
+        accel[1] = f2b.f;
+
+        f2b.b[0] = input[24];
+        f2b.b[1] = input[25];
+        f2b.b[2] = input[26];
+        f2b.b[3] = input[27];
+        accel[2] = f2b.f;
+//        printf("Accel: x %f, y %f, z %f\n", accel[0], accel[1], accel[2]);
+
+//        gyroRaw[0] = ( input[14] << 8 ) | input[15];
+//        gyroRaw[1] = ( input[16] << 8 ) | input[17];
+//        gyroRaw[2] = ( input[18] << 8 ) | input[19];
+
+        f2b.b[0] = input[28];
+        f2b.b[1] = input[29];
+        f2b.b[2] = input[30];
+        f2b.b[3] = input[31];
+        gyro[0] = f2b.f;
+        
+        f2b.b[0] = input[32];
+        f2b.b[1] = input[33];
+        f2b.b[2] = input[34];
+        f2b.b[3] = input[35];
+        gyro[1] = f2b.f;
+        
+        f2b.b[0] = input[36];
+        f2b.b[1] = input[37];
+        f2b.b[2] = input[38];
+        f2b.b[3] = input[39];
+        gyro[2] = f2b.f;
+//        printf("Gyro: x %f, y %f, z %f\n", gyro[0], gyro[1], gyro[2]);
+
+        
+        joystickRaw[0] = (input[40] << 8) | input[41]; // X (horizontal)
+        joystickRaw[1] = (input[42] << 8) | input[43]; // Y (vertical)
+        joystickRaw[2] = input[44]; // button (binary)
+        trackballRaw[0] = input[45]; // X (horizontal)
+        trackballRaw[1] = input[47]; // Y (vertical)
+        trackballRaw[2] = input[49]; // button (binary)
     
-        quaternion[0] = quatRaw[0] / 16384.0;
-//        quaternion[0] = quatRaw[0] / 1073741824.0;
-        if (quaternion[0] >= 2.0) { quaternion[0] = quaternion[0] - 4.0f; }
-        quaternion[1] = quatRaw[1] / 16384.0;
-//        quaternion[1] = quatRaw[1] / 1073741824.0;
-        if (quaternion[1] >= 2.0) { quaternion[1] = quaternion[1] - 4.0f; }
-        quaternion[2] = quatRaw[2] / 16384.0;
-//        quaternion[2] = quatRaw[2] / 1073741824.0;
-        if (quaternion[2] >= 2.0) { quaternion[2] = quaternion[2] - 4.0f; }
-        quaternion[3] = quatRaw[3] / 16384.0;
-//        quaternion[3] = quatRaw[3] / 1073741824.0;
+//        quaternion[0] = quatRaw[0] / 16384.0;
+//        if (quaternion[0] >= 2.0) { quaternion[0] = quaternion[0] - 4.0f; }
+//        quaternion[1] = quatRaw[1] / 16384.0;
+//        if (quaternion[1] >= 2.0) { quaternion[1] = quaternion[1] - 4.0f; }
+//        quaternion[2] = quatRaw[2] / 16384.0;
+//        if (quaternion[2] >= 2.0) { quaternion[2] = quaternion[2] - 4.0f; }
+//        quaternion[3] = quatRaw[3] / 16384.0;
 //        if (quaternion[3] >= 2.0) { quaternion[3] = quaternion[3] - 4.0f; }
 //        printf("Quaternions:\nRAW %ld - %ld - %ld - %ld\nFLOAT %f - %f - %f - %f\n", quatRaw[0], quatRaw[1], quatRaw[2], quatRaw[3], quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
     
-        if(accelRaw[0] > 32767) { accelRaw[0] -= 65536.0; }
-        if(accelRaw[1] > 32767) { accelRaw[1] -= 65536.0; }
-        if(accelRaw[2] > 32767) { accelRaw[2] -= 65536.0; }
-    
-        accel[0] = ( accelRaw[0] + 32767.0f ) / 65536.0f;
-        accel[1] = ( accelRaw[1] + 32767.0f ) / 65536.0f;
-        accel[2] = ( accelRaw[2] + 32767.0f ) / 65536.0f;
-    
-        if(gyroRaw[0] > 32767) { gyroRaw[0] -= 65536.0; }
-        if(gyroRaw[1] > 32767) { gyroRaw[1] -= 65536.0; }
-        if(gyroRaw[2] > 32767) { gyroRaw[2] -= 65536.0; }
-    
-        gyro[0] = ( gyroRaw[0] + 32767.0f ) / 65536.0f;
-        gyro[1] = ( gyroRaw[1] + 32767.0f ) / 65536.0f;
-        gyro[2] = ( gyroRaw[2] + 32767.0f ) / 65536.0f;
+//        if(accelRaw[0] > 32767) { accelRaw[0] -= 65536.0; }
+//        if(accelRaw[1] > 32767) { accelRaw[1] -= 65536.0; }
+//        if(accelRaw[2] > 32767) { accelRaw[2] -= 65536.0; }
+//    
+//        accel[0] = ( accelRaw[0] + 32767.0f ) / 65536.0f;
+//        accel[1] = ( accelRaw[1] + 32767.0f ) / 65536.0f;
+//        accel[2] = ( accelRaw[2] + 32767.0f ) / 65536.0f;
+//    
+//        if(gyroRaw[0] > 32767) { gyroRaw[0] -= 65536.0; }
+//        if(gyroRaw[1] > 32767) { gyroRaw[1] -= 65536.0; }
+//        if(gyroRaw[2] > 32767) { gyroRaw[2] -= 65536.0; }
+//    
+//        gyro[0] = ( gyroRaw[0] + 32767.0f ) / 65536.0f;
+//        gyro[1] = ( gyroRaw[1] + 32767.0f ) / 65536.0f;
+//        gyro[2] = ( gyroRaw[2] + 32767.0f ) / 65536.0f;
     
         summedIMU[0] = (fabs(accel[0] - 0.5) + fabs(accel[1] - 0.5) + fabs(accel[2] - 0.5) ) * 0.66666666666666666666;
         summedIMU[1] = (fabs(gyro[0] - 0.5) + fabs(gyro[1] - 0.5) + fabs(gyro[2] - 0.5) ) * 0.66666666666666666666;
@@ -190,13 +234,12 @@ void threadedSerial::parsePacket()
         quatToAngleAxis();
 //        eulerToAngleAxis();
         
-        slider = sliderRaw / 1024.0f;
         joystick[0] = (joystickRaw[0]) / 1024.0f;
         joystick[1] = (joystickRaw[1]) / 1024.0f;
         trackball[0] = (trackballRaw[0]) / 240.0f;
         trackball[1] = (trackballRaw[1]) / 240.0f;
         trackball[2] = trackballRaw[2];
-        switchValue = trackball[2]; // Possible to add other switches here!
+        switchValue = (joystickRaw[2] << 1) | trackballRaw[2]; // Possible to add other switches here!
         if(switchValue != oldSwitchValue) {
             oldSwitchValue = switchValue;
             switchValueChanged = true;
@@ -317,6 +360,8 @@ void threadedSerial::draw()
     double y1 = 37;
     double y2 = 53;
     double y3 = 69;
+    double accelScale = 0.25;
+    double gyroScale = 0.02;
 	
 	if( lock() ) {
 		if (status == 1) {
@@ -345,13 +390,19 @@ void threadedSerial::draw()
             
             ofFill();
             ofSetColor(0, 0, 0, 255);
-            ofRect( x1 + (104 * accel[0]), y1, 2, 12);
-            ofRect( x1 + (104 * accel[1]), y2, 2, 12);
-            ofRect( x1 + (104 * accel[2]), y3, 2, 12);
+//            ofRect( x1 + (104 * accel[0]), y1, 2, 12);
+//            ofRect( x1 + (104 * accel[1]), y2, 2, 12);
+//            ofRect( x1 + (104 * accel[2]), y3, 2, 12);
+            ofRect( x1 + (52 + (52 * accelScale * accel[0])), y1, 2, 12);
+            ofRect( x1 + (52 + (52 * accelScale * accel[1])), y2, 2, 12);
+            ofRect( x1 + (52 + (52 * accelScale * accel[2])), y3, 2, 12);
             
-            ofRect( x1 + 110 + (104 * gyro[0]), y1, 2, 12);
-            ofRect( x1 + 110 + (104 * gyro[1]), y2, 2, 12);
-            ofRect( x1 + 110 + (104 * gyro[2]), y3, 2, 12);
+//            ofRect( x1 + 110 + (104 * gyro[0]), y1, 2, 12);
+//            ofRect( x1 + 110 + (104 * gyro[1]), y2, 2, 12);
+//            ofRect( x1 + 110 + (104 * gyro[2]), y3, 2, 12);
+            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[0])), y1, 2, 12);
+            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[1])), y2, 2, 12);
+            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[2])), y3, 2, 12);
             
             ofNoFill();
             ofSetColor(91, 91, 91, 255);
@@ -368,7 +419,8 @@ void threadedSerial::draw()
             
             ofPushMatrix();
             ofTranslate(320., 125., 0);
-            ofRotate( angleAxis[0] * RAD_TO_DEG, -angleAxis[1], angleAxis[3], angleAxis[2]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
+            //
+            ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]); // rotate(axis[0], -axis[1], axis[3], axis[2]);
             ofScale(30., 10., 60.);
             drawCube();
             ofSetColor(255, 127, 0);
@@ -427,10 +479,11 @@ void threadedSerial::quatToEuler()
 //    quaternion[3] = ((packet[8] << 8) | packet[9]) / 16384.0f;
     
     double gravity[3];
+    double test = quaternion[1] * quaternion[2] + quaternion[3] * quaternion[0];
     
-    for (int i = 0; i < 4; i++) {
-        if (quaternion[i] >= 2) quaternion[i] = -4 + quaternion[i];
-    }
+//    for (int i = 0; i < 4; i++) {
+//        if (quaternion[i] >= 2) quaternion[i] = -4 + quaternion[i];
+//    }
 
     // calculate gravity vector
     gravity[0] = 2 * (quaternion[1] * quaternion[3] - quaternion[0] * quaternion[2]);
@@ -438,14 +491,29 @@ void threadedSerial::quatToEuler()
     gravity[2] = quaternion[0] * quaternion[0] - quaternion[1] * quaternion[1] - quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3];
 
     // calculate Euler angles
-    euler[0] = atan2(2 * quaternion[1] * quaternion[2] - 2 * quaternion[0] * quaternion[3], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[1] * quaternion[1] - 1);
-    euler[1] = -asin(2 * quaternion[1] * quaternion[3] + 2 * quaternion[0] * quaternion[2]);
-    euler[2] = atan2(2 * quaternion[2] * quaternion[3] - 2 * quaternion[0] * quaternion[1], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[3] * quaternion[3] - 1);
+//    euler[0] = atan2(2 * quaternion[1] * quaternion[2] - 2 * quaternion[0] * quaternion[3], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[1] * quaternion[1] - 1);
+//    euler[1] = -asin(2 * quaternion[1] * quaternion[3] + 2 * quaternion[0] * quaternion[2]);
+//    euler[2] = atan2(2 * quaternion[2] * quaternion[3] - 2 * quaternion[0] * quaternion[1], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[3] * quaternion[3] - 1);
+    if(test > 0.499) {
+        euler[0] = 2 * atan2(quaternion[1], quaternion[0]);
+        euler[1] = PI * 0.5;
+        euler[2] = 0;
+    }
+    else if(test < -0.499) {
+        euler[0] = -2 * atan2(quaternion[1], quaternion[0]);
+        euler[1] = -PI * 0.5;
+        euler[2] = 0;
+    }
+    else {
+        euler[0] = atan2(2 * quaternion[2] * quaternion[0] - 2 * quaternion[1] * quaternion[3], 1 - 2 * quaternion[2] * quaternion[2] - 2 * quaternion[3] * quaternion[3]); // heading
+        euler[1] = asin(2 * quaternion[1] * quaternion[2] + 2 * quaternion[3] * quaternion[0]); // attitude
+        euler[2] = atan2(2 * quaternion[1] * quaternion[0] - 2 * quaternion[2] * quaternion[3], 1 - 2 * quaternion[1] * quaternion[1] - 2 * quaternion[3] * quaternion[3]); // bank
+    }
  
     // calculate yaw/pitch/roll angles
-    ypr[0] = atan2(2 * quaternion[1] * quaternion[2] - 2 * quaternion[0] * quaternion[3], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[1] * quaternion[1] - 1);
-    ypr[1] = atan(gravity[0] / sqrt(gravity[1] * gravity[1] + gravity[2] * gravity[2]));
-    ypr[2] = atan(gravity[1] / sqrt(gravity[0] * gravity[0] + gravity[2] * gravity[2]));
+    ypr[0] = atan2(2 * quaternion[1] * quaternion[2] - 2 * quaternion[0] * quaternion[3], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[1] * quaternion[1] - 1); // yaw
+    ypr[1] = atan(gravity[0] / sqrt(gravity[1] * gravity[1] + gravity[2] * gravity[2])); // pitch
+    ypr[2] = atan(gravity[1] / sqrt(gravity[0] * gravity[0] + gravity[2] * gravity[2])); // roll
 }
 
 

@@ -15,10 +15,11 @@
 
 #include "ofxOsc.h"
 #include "ofxXmlSettings.h"
+#include "sys/time.h"
 
 //#define RAD_TO_DEG 180.0 / PI  // 57.295792
 
-#define SENSOR_PATTERNLENGTH_1 36
+#define SENSOR_PATTERNLENGTH_1 60
 
 class threadedSerial : public ofThread
 {
@@ -105,8 +106,8 @@ public:
     
     long        sliderRaw;
     double      slider;
-    long        joystickRaw[2];
-    double      joystick[2];
+    long        joystickRaw[3];
+    double      joystick[3];
     int         trackballRaw[3];
     double      trackball[3];
     int         switchValue;
