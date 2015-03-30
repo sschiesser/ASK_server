@@ -111,16 +111,6 @@ void threadedSerial::parsePacket()
 //        gettimeofday(&tval_new, NULL);
 //        printf("Packet received... %f\n", (float)(0.001*(float)tval_new.tv_usec));
         
-//        quatRaw[0] = ( input[0] << 8 ) | input[1];
-//        quatRaw[1] = ( input[2] << 8 ) | input[3];
-//        quatRaw[2] = ( input[4] << 8 ) | input[5];
-//        quatRaw[3] = ( input[6] << 8 ) | input[7];
-        
-//        quatRaw[0] = ( (input[0] << 24) | (input[1] << 16) | (input[2] << 8) | input[3] );
-//        quatRaw[1] = ( (input[4] << 24) | (input[5] << 16) | (input[6] << 8) | input[7] );
-//        quatRaw[2] = ( (input[8] << 24) | (input[9] << 16) | (input[10] << 8) | input[11] );
-//        quatRaw[3] = ( (input[12] << 24) | (input[13] << 16) | (input[14] << 8) | input[15] );
-        
         f2b.b[0] = input[0];
         f2b.b[1] = input[1];
         f2b.b[2] = input[2];
@@ -146,11 +136,7 @@ void threadedSerial::parsePacket()
         f2b.b[3] = input[15];
         quaternion[3] = f2b.f;
 //        printf("Quat: w %f, x %f, y %f, z %f\n", quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
-    
-//        accelRaw[0] = ( input[8] << 8 ) | input[9];
-//        accelRaw[1] = ( input[10] << 8 ) | input[11];
-//        accelRaw[2] = ( input[12] << 8 ) | input[13];
-        
+
         f2b.b[0] = input[16];
         f2b.b[1] = input[17];
         f2b.b[2] = input[18];
@@ -169,10 +155,6 @@ void threadedSerial::parsePacket()
         f2b.b[3] = input[27];
         accel[2] = f2b.f;
 //        printf("Accel: x %f, y %f, z %f\n", accel[0], accel[1], accel[2]);
-
-//        gyroRaw[0] = ( input[14] << 8 ) | input[15];
-//        gyroRaw[1] = ( input[16] << 8 ) | input[17];
-//        gyroRaw[2] = ( input[18] << 8 ) | input[19];
 
         f2b.b[0] = input[28];
         f2b.b[1] = input[29];
@@ -200,33 +182,8 @@ void threadedSerial::parsePacket()
         trackballRaw[0] = input[45]; // X (horizontal)
         trackballRaw[1] = input[47]; // Y (vertical)
         trackballRaw[2] = input[49]; // button (binary)
-    
-//        quaternion[0] = quatRaw[0] / 16384.0;
-//        if (quaternion[0] >= 2.0) { quaternion[0] = quaternion[0] - 4.0f; }
-//        quaternion[1] = quatRaw[1] / 16384.0;
-//        if (quaternion[1] >= 2.0) { quaternion[1] = quaternion[1] - 4.0f; }
-//        quaternion[2] = quatRaw[2] / 16384.0;
-//        if (quaternion[2] >= 2.0) { quaternion[2] = quaternion[2] - 4.0f; }
-//        quaternion[3] = quatRaw[3] / 16384.0;
-//        if (quaternion[3] >= 2.0) { quaternion[3] = quaternion[3] - 4.0f; }
-//        printf("Quaternions:\nRAW %ld - %ld - %ld - %ld\nFLOAT %f - %f - %f - %f\n", quatRaw[0], quatRaw[1], quatRaw[2], quatRaw[3], quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
-    
-//        if(accelRaw[0] > 32767) { accelRaw[0] -= 65536.0; }
-//        if(accelRaw[1] > 32767) { accelRaw[1] -= 65536.0; }
-//        if(accelRaw[2] > 32767) { accelRaw[2] -= 65536.0; }
-//    
-//        accel[0] = ( accelRaw[0] + 32767.0f ) / 65536.0f;
-//        accel[1] = ( accelRaw[1] + 32767.0f ) / 65536.0f;
-//        accel[2] = ( accelRaw[2] + 32767.0f ) / 65536.0f;
-//    
-//        if(gyroRaw[0] > 32767) { gyroRaw[0] -= 65536.0; }
-//        if(gyroRaw[1] > 32767) { gyroRaw[1] -= 65536.0; }
-//        if(gyroRaw[2] > 32767) { gyroRaw[2] -= 65536.0; }
-//    
-//        gyro[0] = ( gyroRaw[0] + 32767.0f ) / 65536.0f;
-//        gyro[1] = ( gyroRaw[1] + 32767.0f ) / 65536.0f;
-//        gyro[2] = ( gyroRaw[2] + 32767.0f ) / 65536.0f;
-    
+//        printf("joy raw: %d, %d, %d\ntb raw: %d, %d, %d\n", joystickRaw[0], joystickRaw[1], joystickRaw[2], trackballRaw[0], trackballRaw[1], trackballRaw[2]);
+
         summedIMU[0] = (fabs(accel[0] - 0.5) + fabs(accel[1] - 0.5) + fabs(accel[2] - 0.5) ) * 0.66666666666666666666;
         summedIMU[1] = (fabs(gyro[0] - 0.5) + fabs(gyro[1] - 0.5) + fabs(gyro[2] - 0.5) ) * 0.66666666666666666666;
     
@@ -236,13 +193,17 @@ void threadedSerial::parsePacket()
         
         joystick[0] = (joystickRaw[0]) / 1024.0f;
         joystick[1] = (joystickRaw[1]) / 1024.0f;
+        joystick[2] = joystickRaw[2];
+        if(joystick[2] != oldJoySw) {
+            oldJoySw = joystick[2];
+            joySwChanged = true;
+        }
         trackball[0] = (trackballRaw[0]) / 240.0f;
         trackball[1] = (trackballRaw[1]) / 240.0f;
         trackball[2] = trackballRaw[2];
-        switchValue = (joystickRaw[2] << 1) | trackballRaw[2]; // Possible to add other switches here!
-        if(switchValue != oldSwitchValue) {
-            oldSwitchValue = switchValue;
-            switchValueChanged = true;
+        if(trackball[2] != oldTbSw) {
+            oldTbSw = trackball[2];
+            tbSwChanged = true;
         }
 //        printf("Slider: %f\nThumb Joy: %f - %f\nTrackball: %f - %f - %d\n", slider, joystick[0], joystick[1], trackball[0], trackball[1], (int)trackball[2]);
     }
@@ -323,23 +284,19 @@ void threadedSerial::sendOSC()
             sender.sendMessage( m[7] );
             
             m[8].clear();
-            m[8].setAddress( thumbsaddresses[1] ); // slider
-            m[8].addFloatArg( slider);
+            m[8].setAddress( thumbsaddresses[1] ); // thumb joystick
+            m[8].addFloatArg( joystick[0]);
+            m[8].addFloatArg( joystick[1]);
+            m[8].addIntArg(joystick[2]);
             sender.sendMessage( m[8] );
             
             m[9].clear();
-            m[9].setAddress( thumbsaddresses[2] ); // thumb joystick
-            m[9].addFloatArg( joystick[0]);
-            m[9].addFloatArg( joystick[1]);
-            sender.sendMessage( m[9] );
-            
-            m[10].clear();
-            m[10].setAddress( thumbsaddresses[3] ); // trackball
-            m[10].addFloatArg( trackball[0] );
-            m[10].addFloatArg( trackball[1] );
-            if(switchValueChanged) {
-                m[10].addFloatArg( trackball[2] );
-                switchValueChanged = false;
+            m[9].setAddress( thumbsaddresses[2] ); // trackball
+            m[9].addFloatArg( trackball[0] );
+            m[9].addFloatArg( trackball[1] );
+            if(tbSwChanged) {
+                m[9].addFloatArg( trackball[2] );
+                tbSwChanged = false;
             }
             sender.sendMessage( m[10] );
            
@@ -358,9 +315,10 @@ void threadedSerial::draw()
 	double x1 = 10; // left border for left sliders
     double x2 = x1 + 110; // left border for right sliders
 	double yy = 74; // top border for text display
-    double y1 = 37; // top border for top sliders (x)
-    double y2 = 53; // top border for middle sliders (y)
-    double y3 = 69; // top border for bottom sliders (z)
+    int textLineHeight = 16;
+    double y1 = 16; // top border for top sliders (x)
+    double y2 = y1 + textLineHeight; // top border for middle sliders (y)
+    double y3 = y2 + textLineHeight; // top border for bottom sliders (z)
     double accelScale = 0.25;
     double gyroScale = 0.02;
 	
@@ -369,14 +327,16 @@ void threadedSerial::draw()
 
             // text display
             ofSetColor(0, 0, 0, 255);
-            TTF.drawString( "quaternion " + ofToString( quaternion[0], 6) + " " + ofToString( quaternion[1], 6) + " " +  ofToString( quaternion[2], 6) + " " +  ofToString( quaternion[3], 6), x1, yy);
-            TTF.drawString( "accel " + ofToString( accel[0], 5) + " " + ofToString( accel[1], 5) + " " + ofToString( accel[2], 5), x1, yy + 16);
-            TTF.drawString(  "gyro   " +  ofToString( gyro[0], 5) + " " + ofToString( gyro[1], 5) + " " + ofToString( gyro[2], 5), x1, yy + 32);
-            TTF.drawString( "euler " + ofToString( euler[0] * RAD_TO_DEG ) + " " + ofToString( euler[1] * RAD_TO_DEG )+ " " + ofToString( euler[2] * RAD_TO_DEG ), x1 + 200, yy + 16);
-            TTF.drawString( "ypr " + ofToString( ypr[0] * RAD_TO_DEG ) + " " + ofToString( ypr[1] * RAD_TO_DEG ) + " " + ofToString( ypr[2] * RAD_TO_DEG ), x1 + 200, yy + 32);
+            TTF.drawString( "quaternion " + ofToString(quaternion[0], 6) + " " + ofToString(quaternion[1], 6) + " " +  ofToString(quaternion[2], 6) + " " +  ofToString(quaternion[3], 6), x1, yy);
+            TTF.drawString( "accel " + ofToString(accel[0], 5) + " " + ofToString(accel[1], 5) + " " + ofToString( accel[2], 5), x1, yy + textLineHeight);
+            TTF.drawString(  "gyro   " +  ofToString(gyro[0], 5) + " " + ofToString(gyro[1], 5) + " " + ofToString( gyro[2], 5), x1, yy + 2*textLineHeight);
+            TTF.drawString( "joystick " + ofToString(joystick[0]) + " " + ofToString(joystick[1]) + " " + ofToString(joystick[2]), x1, yy + 3*textLineHeight);
+            TTF.drawString( "euler " + ofToString(euler[0] * RAD_TO_DEG) + " " + ofToString(euler[1] * RAD_TO_DEG)+ " " + ofToString(euler[2] * RAD_TO_DEG), x1 + 200, yy + textLineHeight);
+            TTF.drawString( "ypr " + ofToString(ypr[0] * RAD_TO_DEG) + " " + ofToString(ypr[1] * RAD_TO_DEG) + " " + ofToString(ypr[2] * RAD_TO_DEG), x1 + 200, yy + 2*textLineHeight);
+            TTF.drawString( "trackball " + ofToString(trackball[0]) + " " + ofToString(trackball[1]) + " " + ofToString(trackball[2]), x1 + 200, yy + 3*textLineHeight);
            
             ofPushMatrix();
-            ofTranslate(0, 80);
+            ofTranslate(0, yy + (3*textLineHeight));
             
             // sliders for accel & gyro display
             ofNoFill(); // rectangles
@@ -409,7 +369,7 @@ void threadedSerial::draw()
             ofPopMatrix();
             
             ofPushMatrix();
-            ofTranslate(320., 140., 0); // set drawing center point for cube
+            ofTranslate(320., (yy + 3*textLineHeight + 40), 0); // set drawing center point for cube
             
             // cube
             ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]);

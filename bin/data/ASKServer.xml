@@ -37,12 +37,9 @@
         <oscaddress>/icst/thumbs/flat/1</oscaddress>
     </thumbs>
     <thumbs id="1">
-        <oscaddress>/icst/thumbs/slider</oscaddress>
-    </thumbs>
-    <thumbs id="2">
         <oscaddress>/icst/thumbs/joystick</oscaddress>
     </thumbs>
-    <thumbs id="3">
+    <thumbs id="2">
         <oscaddress>/icst/thumbs/trackball</oscaddress>
     </thumbs>
     <system id="0">
@@ -51,6 +48,6 @@
     <system id="1">
         <oscaddress>/icst/system/systime</oscaddress>
     </system>
+    <serialport>/dev/tty.usbserial-A7005GiX</serialport>
     <display>0</display>
-    <serialport>/dev/tty.usbserial-DA01AFB8</serialport>
 </ASKServer>

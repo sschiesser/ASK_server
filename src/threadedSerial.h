@@ -104,15 +104,14 @@ public:
     double      gyro[3];
     double      summedIMU[3];
     
-    long        sliderRaw;
-    double      slider;
-    long        joystickRaw[3];
+    int         joystickRaw[3];
     double      joystick[3];
+    int         oldJoySw;
+    bool        joySwChanged;
     int         trackballRaw[3];
     double      trackball[3];
-    int         switchValue;
-    int         oldSwitchValue;
-    bool        switchValueChanged;
+    int         oldTbSw;
+    bool        tbSwChanged;
 
 };
 

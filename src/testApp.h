@@ -87,6 +87,4 @@ public:
 	bool	menuState;
 	int		numMenuItems;
 	ofPoint menuClickPos;
-	
-		
 };
