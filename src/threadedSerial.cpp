@@ -90,10 +90,10 @@ void threadedSerial::serialparse(unsigned char *c)
 	// pattern matching... MPU frame
 	if (serialStream[0] == 60) { // packet start marker 'A'
         if(serialStream[1] == 191) {	// MPU sensor packet
-            if(serialStream[59] == 90) { // packet end marker 'Z'
-                for(i = 0; i < 58; i++) { // collect n-2 bytes into buffer
+            if(serialStream[35] == 90) { // packet end marker 'Z'
+                for(i = 0; i < 34; i++) { // collect n-2 bytes into buffer
                     input[i] = serialStream[i+2];
-//                    printf("input[%d] = %d\n", i, input[i]);
+                    printf("input[%d] = %d\n", i, input[i]);
                 }
                 haveInput = true;
                 parsePacket();
@@ -105,11 +105,11 @@ void threadedSerial::serialparse(unsigned char *c)
 
 void threadedSerial::parsePacket()
 {
-//    struct timeval tval_old, tval_new, tval_delta;
+    struct timeval tval_old, tval_new, tval_delta;
     
     if(haveInput) {
-//        gettimeofday(&tval_new, NULL);
-//        printf("Packet received... %f\n", (float)(0.001*(float)tval_new.tv_usec));
+        gettimeofday(&tval_new, NULL);
+        printf("Packet received... %f\n", (float)(0.001*(float)tval_new.tv_usec));
         
         f2b.b[0] = input[0];
         f2b.b[1] = input[1];
