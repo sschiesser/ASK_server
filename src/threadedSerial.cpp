@@ -115,69 +115,73 @@ void threadedSerial::parsePacket()
         f2b.b[1] = input[1];
         f2b.b[2] = input[2];
         f2b.b[3] = input[3];
-        quaternion[0] = f2b.f;
+//        quaternion[0] = f2b.f;
 //        printf("Quat 1: in0 0x%x, in1 0x%x, in2 0x%x, in3 0x%x, float %f\n", input[0], input[1], input[2], input[3], quaternion[0]);
+        fusedEuler[0] = f2b.f;
+        printf("Euler 1: 0x%x, 0x%x, 0x%x, 0x%x, float %f\n", input[0], input[1], input[2], input[3], fusedEuler[0]);
 
         f2b.b[0] = input[4];
         f2b.b[1] = input[5];
         f2b.b[2] = input[6];
         f2b.b[3] = input[7];
-        quaternion[1] = f2b.f;
+//        quaternion[1] = f2b.f;
+        fusedEuler[1] = f2b.f;
 
         f2b.b[0] = input[8];
         f2b.b[1] = input[9];
         f2b.b[2] = input[10];
         f2b.b[3] = input[11];
-        quaternion[2] = f2b.f;
+//        quaternion[2] = f2b.f;
+        fusedEuler[2] = f2b.f;
 
-        f2b.b[0] = input[12];
-        f2b.b[1] = input[13];
-        f2b.b[2] = input[14];
-        f2b.b[3] = input[15];
-        quaternion[3] = f2b.f;
+//        f2b.b[0] = input[12];
+//        f2b.b[1] = input[13];
+//        f2b.b[2] = input[14];
+//        f2b.b[3] = input[15];
+//        quaternion[3] = f2b.f;
 //        printf("Quat: w %f, x %f, y %f, z %f\n", quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
 
-        f2b.b[0] = input[16];
-        f2b.b[1] = input[17];
-        f2b.b[2] = input[18];
-        f2b.b[3] = input[19];
-        accel[0] = f2b.f;
-        
-        f2b.b[0] = input[20];
-        f2b.b[1] = input[21];
-        f2b.b[2] = input[22];
-        f2b.b[3] = input[23];
-        accel[1] = f2b.f;
-
-        f2b.b[0] = input[24];
-        f2b.b[1] = input[25];
-        f2b.b[2] = input[26];
-        f2b.b[3] = input[27];
-        accel[2] = f2b.f;
+//        f2b.b[0] = input[16];
+//        f2b.b[1] = input[17];
+//        f2b.b[2] = input[18];
+//        f2b.b[3] = input[19];
+//        accel[0] = f2b.f;
+//        
+//        f2b.b[0] = input[20];
+//        f2b.b[1] = input[21];
+//        f2b.b[2] = input[22];
+//        f2b.b[3] = input[23];
+//        accel[1] = f2b.f;
+//
+//        f2b.b[0] = input[24];
+//        f2b.b[1] = input[25];
+//        f2b.b[2] = input[26];
+//        f2b.b[3] = input[27];
+//        accel[2] = f2b.f;
 //        printf("Accel: x %f, y %f, z %f\n", accel[0], accel[1], accel[2]);
 
-        f2b.b[0] = input[28];
-        f2b.b[1] = input[29];
-        f2b.b[2] = input[30];
-        f2b.b[3] = input[31];
-        gyro[0] = f2b.f;
-        
-        f2b.b[0] = input[32];
-        f2b.b[1] = input[33];
-        f2b.b[2] = input[34];
-        f2b.b[3] = input[35];
-        gyro[1] = f2b.f;
-        
-        f2b.b[0] = input[36];
-        f2b.b[1] = input[37];
-        f2b.b[2] = input[38];
-        f2b.b[3] = input[39];
-        gyro[2] = f2b.f;
+//        f2b.b[0] = input[28];
+//        f2b.b[1] = input[29];
+//        f2b.b[2] = input[30];
+//        f2b.b[3] = input[31];
+//        gyro[0] = f2b.f;
+//        
+//        f2b.b[0] = input[32];
+//        f2b.b[1] = input[33];
+//        f2b.b[2] = input[34];
+//        f2b.b[3] = input[35];
+//        gyro[1] = f2b.f;
+//        
+//        f2b.b[0] = input[36];
+//        f2b.b[1] = input[37];
+//        f2b.b[2] = input[38];
+//        f2b.b[3] = input[39];
+//        gyro[2] = f2b.f;
 //        printf("Gyro: x %f, y %f, z %f\n", gyro[0], gyro[1], gyro[2]);
 
         
-        joystickRaw[0] = (input[40] << 8) | input[41]; // X (horizontal)
-        joystickRaw[1] = (input[42] << 8) | input[43]; // Y (vertical)
+        joystickRaw[0] = (input[24] << 8) | input[25]; // X (horizontal)
+        joystickRaw[1] = (input[26] << 8) | input[27]; // Y (vertical)
         joystickRaw[2] = input[44]; // button (binary)
         trackballRaw[0] = input[45]; // X (horizontal)
         trackballRaw[1] = input[47]; // Y (vertical)

@@ -94,6 +94,7 @@ public:
     
     long        quatRaw[4];
     double      quaternion[4];
+    double      fusedEuler[3];
     double      angleAxis[4];
     double      euler[3];
     double      ypr[3];
