@@ -287,7 +287,10 @@ void threadedSerial::sendOSC()
             m[8].setAddress( thumbsaddresses[1] ); // thumb joystick
             m[8].addFloatArg( joystick[0]);
             m[8].addFloatArg( joystick[1]);
-            m[8].addIntArg(joystick[2]);
+            if(joySwChanged) {
+                m[8].addIntArg(joystick[2]);
+                joySwChanged = false;
+            }
             sender.sendMessage( m[8] );
             
             m[9].clear();
@@ -298,13 +301,13 @@ void threadedSerial::sendOSC()
                 m[9].addFloatArg( trackball[2] );
                 tbSwChanged = false;
             }
-            sender.sendMessage( m[10] );
+            sender.sendMessage( m[9] );
            
-            m[11].clear();
-            m[11].setAddress( systemaddresses[1] ); // timestamp
-            m[11].addIntArg( timestamp );
-            m[11].addIntArg( deltaTime );
-            sender.sendMessage( m[11] );
+            m[10].clear();
+            m[10].setAddress( systemaddresses[1] ); // timestamp
+            m[10].addIntArg( timestamp );
+            m[10].addIntArg( deltaTime );
+            sender.sendMessage( m[10] );
         }		
 		haveInput = false;
 	}
