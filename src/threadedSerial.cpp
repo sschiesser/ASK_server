@@ -184,6 +184,9 @@ void threadedSerial::parsePacket()
         trackballRaw[2] = input[49]; // button (binary)
 //        printf("joy raw: %d, %d, %d\ntb raw: %d, %d, %d\n", joystickRaw[0], joystickRaw[1], joystickRaw[2], trackballRaw[0], trackballRaw[1], trackballRaw[2]);
 
+        deltaTime = ((input[50] << 24) | (input[51] << 16) | (input[52] << 8) | input[53]);
+        printf("deltaTime: %ld\n", deltaTime);
+        
         summedIMU[0] = (fabs(accel[0] - 0.5) + fabs(accel[1] - 0.5) + fabs(accel[2] - 0.5) ) * 0.66666666666666666666;
         summedIMU[1] = (fabs(gyro[0] - 0.5) + fabs(gyro[1] - 0.5) + fabs(gyro[2] - 0.5) ) * 0.66666666666666666666;
     

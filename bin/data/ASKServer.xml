@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <ASKServer>
     <!-- <baudrate>57600</baudrate> -->
-    <baudrate>115200</baudrate>
+    <baudrate>57600</baudrate>
     <!-- <baudrate>115200</baudrate> -->
     <network>
         <sender>
@@ -47,6 +47,9 @@
     </system>
     <system id="1">
         <oscaddress>/icst/system/systime</oscaddress>
+    </system>
+    <system id="2">
+        <oscaddress>/icst/system/deltatime</oscaddress>
     </system>
     <display>0</display>
     <serialport>/dev/tty.usbserial-A7005GiX</serialport>
