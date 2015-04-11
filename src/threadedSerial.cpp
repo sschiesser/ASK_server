@@ -312,7 +312,11 @@ void threadedSerial::sendOSC()
             sender.sendMessage(m[10]);
         }		
 		haveInput = false;
+<<<<<<< HEAD
 //        printf("Systime: %ld\n", systime);
+=======
+        printf("Systime: %ld\n", systime);
+>>>>>>> 93bd1395717ac6c38e00692731071af54e426a6a
 	}
 }
 
