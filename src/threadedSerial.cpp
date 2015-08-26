@@ -312,11 +312,8 @@ void threadedSerial::sendOSC()
             sender.sendMessage(m[10]);
         }		
 		haveInput = false;
-<<<<<<< HEAD
 //        printf("Systime: %ld\n", systime);
-=======
-        printf("Systime: %ld\n", systime);
->>>>>>> 93bd1395717ac6c38e00692731071af54e426a6a
+
 	}
 }
 
@@ -383,10 +380,11 @@ void threadedSerial::draw()
             
             // cube
             ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]);
+//            ofRotate( angleAxis[0] * RAD_TO_DEG, -angleAxis[3], angleAxis[1], -angleAxis[2]);
             ofScale(25., 5., 50.);
             drawCube();
             ofSetColor(255, 127, 0);
-            ofLine(0.0, 0.0, 0.0, 0.0, 0.0, -1.0);
+            ofLine(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
             
             ofPopMatrix();
         }
@@ -413,8 +411,8 @@ void threadedSerial::eulerToAngleAxis()
     }
     angleAxis[0] = 2 * (float)acos((c1 * c2 * c3) - (s1 * s2 * s3));
     angleAxis[1] = x * f;
-    angleAxis[2] = y * f;
-    angleAxis[3] = z * f;
+    angleAxis[3] = y * f;
+    angleAxis[2] = z * f;
 }
 
 void threadedSerial::quatToAngleAxis()

@@ -52,5 +52,5 @@
         <oscaddress>/icst/system/deltatime</oscaddress>
     </system>
     <display>0</display>
-    <serialport>/dev/tty.usbserial-A7005GiX</serialport>
+    <serialport>/dev/tty.usbserial-DA01AFB8</serialport>
 </ASKServer>
