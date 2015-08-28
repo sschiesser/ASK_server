@@ -184,8 +184,8 @@ void threadedSerial::parsePacket()
         joystickRaw[0] = (input[40] << 8) | input[41]; // X (horizontal)
         joystickRaw[1] = (input[42] << 8) | input[43]; // Y (vertical)
         joystickRaw[2] = input[44]; // button (binary)
-        trackballRaw[0] = input[45]; // X (horizontal)
-        trackballRaw[1] = input[47]; // Y (vertical)
+        trackballRaw[0] = input[46]; // X (horizontal)
+        trackballRaw[1] = input[48]; // Y (vertical)
         trackballRaw[2] = input[49]; // button (binary)
 //        printf("joy raw: %d, %d, %d\ntb raw: %d, %d, %d\n", joystickRaw[0], joystickRaw[1], joystickRaw[2], trackballRaw[0], trackballRaw[1], trackballRaw[2]);
 
