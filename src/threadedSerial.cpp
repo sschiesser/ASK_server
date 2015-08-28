@@ -74,6 +74,11 @@ void threadedSerial::readSerial()
 	}
 }
 
+void threadedSerial::writeCalibByte(unsigned char byte)
+{
+    serial.writeByte(byte);
+}
+
 void threadedSerial::serialparse(unsigned char *c)
 {
 	int i, j;
@@ -111,16 +116,6 @@ void threadedSerial::parsePacket()
 //        gettimeofday(&tval_new, NULL);
 //        printf("Packet received... %f\n", (float)(0.001*(float)tval_new.tv_usec));
         
-//        quatRaw[0] = ( input[0] << 8 ) | input[1];
-//        quatRaw[1] = ( input[2] << 8 ) | input[3];
-//        quatRaw[2] = ( input[4] << 8 ) | input[5];
-//        quatRaw[3] = ( input[6] << 8 ) | input[7];
-        
-//        quatRaw[0] = ( (input[0] << 24) | (input[1] << 16) | (input[2] << 8) | input[3] );
-//        quatRaw[1] = ( (input[4] << 24) | (input[5] << 16) | (input[6] << 8) | input[7] );
-//        quatRaw[2] = ( (input[8] << 24) | (input[9] << 16) | (input[10] << 8) | input[11] );
-//        quatRaw[3] = ( (input[12] << 24) | (input[13] << 16) | (input[14] << 8) | input[15] );
-        
         f2b.b[0] = input[0];
         f2b.b[1] = input[1];
         f2b.b[2] = input[2];
@@ -146,11 +141,7 @@ void threadedSerial::parsePacket()
         f2b.b[3] = input[15];
         quaternion[3] = f2b.f;
 //        printf("Quat: w %f, x %f, y %f, z %f\n", quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
-    
-//        accelRaw[0] = ( input[8] << 8 ) | input[9];
-//        accelRaw[1] = ( input[10] << 8 ) | input[11];
-//        accelRaw[2] = ( input[12] << 8 ) | input[13];
-        
+
         f2b.b[0] = input[16];
         f2b.b[1] = input[17];
         f2b.b[2] = input[18];
@@ -169,10 +160,6 @@ void threadedSerial::parsePacket()
         f2b.b[3] = input[27];
         accel[2] = f2b.f;
 //        printf("Accel: x %f, y %f, z %f\n", accel[0], accel[1], accel[2]);
-
-//        gyroRaw[0] = ( input[14] << 8 ) | input[15];
-//        gyroRaw[1] = ( input[16] << 8 ) | input[17];
-//        gyroRaw[2] = ( input[18] << 8 ) | input[19];
 
         f2b.b[0] = input[28];
         f2b.b[1] = input[29];
@@ -200,33 +187,11 @@ void threadedSerial::parsePacket()
         trackballRaw[0] = input[45]; // X (horizontal)
         trackballRaw[1] = input[47]; // Y (vertical)
         trackballRaw[2] = input[49]; // button (binary)
-    
-//        quaternion[0] = quatRaw[0] / 16384.0;
-//        if (quaternion[0] >= 2.0) { quaternion[0] = quaternion[0] - 4.0f; }
-//        quaternion[1] = quatRaw[1] / 16384.0;
-//        if (quaternion[1] >= 2.0) { quaternion[1] = quaternion[1] - 4.0f; }
-//        quaternion[2] = quatRaw[2] / 16384.0;
-//        if (quaternion[2] >= 2.0) { quaternion[2] = quaternion[2] - 4.0f; }
-//        quaternion[3] = quatRaw[3] / 16384.0;
-//        if (quaternion[3] >= 2.0) { quaternion[3] = quaternion[3] - 4.0f; }
-//        printf("Quaternions:\nRAW %ld - %ld - %ld - %ld\nFLOAT %f - %f - %f - %f\n", quatRaw[0], quatRaw[1], quatRaw[2], quatRaw[3], quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
-    
-//        if(accelRaw[0] > 32767) { accelRaw[0] -= 65536.0; }
-//        if(accelRaw[1] > 32767) { accelRaw[1] -= 65536.0; }
-//        if(accelRaw[2] > 32767) { accelRaw[2] -= 65536.0; }
-//    
-//        accel[0] = ( accelRaw[0] + 32767.0f ) / 65536.0f;
-//        accel[1] = ( accelRaw[1] + 32767.0f ) / 65536.0f;
-//        accel[2] = ( accelRaw[2] + 32767.0f ) / 65536.0f;
-//    
-//        if(gyroRaw[0] > 32767) { gyroRaw[0] -= 65536.0; }
-//        if(gyroRaw[1] > 32767) { gyroRaw[1] -= 65536.0; }
-//        if(gyroRaw[2] > 32767) { gyroRaw[2] -= 65536.0; }
-//    
-//        gyro[0] = ( gyroRaw[0] + 32767.0f ) / 65536.0f;
-//        gyro[1] = ( gyroRaw[1] + 32767.0f ) / 65536.0f;
-//        gyro[2] = ( gyroRaw[2] + 32767.0f ) / 65536.0f;
-    
+//        printf("joy raw: %d, %d, %d\ntb raw: %d, %d, %d\n", joystickRaw[0], joystickRaw[1], joystickRaw[2], trackballRaw[0], trackballRaw[1], trackballRaw[2]);
+
+        deltaTime = ((input[50] << 24) | (input[51] << 16) | (input[52] << 8) | input[53]);
+//        printf("deltaTime: %ld\n", deltaTime);
+        
         summedIMU[0] = (fabs(accel[0] - 0.5) + fabs(accel[1] - 0.5) + fabs(accel[2] - 0.5) ) * 0.66666666666666666666;
         summedIMU[1] = (fabs(gyro[0] - 0.5) + fabs(gyro[1] - 0.5) + fabs(gyro[2] - 0.5) ) * 0.66666666666666666666;
     
@@ -236,13 +201,17 @@ void threadedSerial::parsePacket()
         
         joystick[0] = (joystickRaw[0]) / 1024.0f;
         joystick[1] = (joystickRaw[1]) / 1024.0f;
+        joystick[2] = joystickRaw[2];
+        if(joystick[2] != oldJoySw) {
+            oldJoySw = joystick[2];
+            joySwChanged = true;
+        }
         trackball[0] = (trackballRaw[0]) / 240.0f;
         trackball[1] = (trackballRaw[1]) / 240.0f;
         trackball[2] = trackballRaw[2];
-        switchValue = (joystickRaw[2] << 1) | trackballRaw[2]; // Possible to add other switches here!
-        if(switchValue != oldSwitchValue) {
-            oldSwitchValue = switchValue;
-            switchValueChanged = true;
+        if(trackball[2] != oldTbSw) {
+            oldTbSw = trackball[2];
+            tbSwChanged = true;
         }
 //        printf("Slider: %f\nThumb Joy: %f - %f\nTrackball: %f - %f - %d\n", slider, joystick[0], joystick[1], trackball[0], trackball[1], (int)trackball[2]);
     }
@@ -254,7 +223,6 @@ void threadedSerial::sendOSC()
         systime = ofGetElapsedTimeMillis();
         timestamp = systime - oldSystime;
         oldSystime = systime;
-        deltaTime = 0;
 //        printf("timestamp: %ld\n", timestamp);
         
         if(sendFlat) {
@@ -323,108 +291,126 @@ void threadedSerial::sendOSC()
             sender.sendMessage( m[7] );
             
             m[8].clear();
-            m[8].setAddress( thumbsaddresses[1] ); // slider
-            m[8].addFloatArg( slider);
+            m[8].setAddress( thumbsaddresses[1] ); // thumb joystick
+            m[8].addFloatArg( joystick[0]);
+            m[8].addFloatArg( joystick[1]);
+            if(joySwChanged) {
+                m[8].addIntArg(joystick[2]);
+                joySwChanged = false;
+            }
             sender.sendMessage( m[8] );
             
             m[9].clear();
-            m[9].setAddress( thumbsaddresses[2] ); // thumb joystick
-            m[9].addFloatArg( joystick[0]);
-            m[9].addFloatArg( joystick[1]);
-            sender.sendMessage( m[9] );
-            
-            m[10].clear();
-            m[10].setAddress( thumbsaddresses[3] ); // trackball
-            m[10].addFloatArg( trackball[0] );
-            m[10].addFloatArg( trackball[1] );
-            if(switchValueChanged) {
-                m[10].addFloatArg( trackball[2] );
-                switchValueChanged = false;
+            m[9].setAddress( thumbsaddresses[2] ); // trackball
+            m[9].addFloatArg( trackball[0] );
+            m[9].addFloatArg( trackball[1] );
+            if(tbSwChanged) {
+                m[9].addFloatArg( trackball[2] );
+                tbSwChanged = false;
             }
-            sender.sendMessage( m[10] );
+            sender.sendMessage( m[9] );
            
-            m[11].clear();
-            m[11].setAddress( systemaddresses[1] ); // timestamp
-            m[11].addIntArg( timestamp );
-            m[11].addIntArg( deltaTime );
-            sender.sendMessage( m[11] );
+            m[10].clear();
+            m[10].setAddress(systemaddresses[1]); // timestamp
+            m[10].addIntArg(systime);
+            m[10].addIntArg(deltaTime);
+            sender.sendMessage(m[10]);
         }		
 		haveInput = false;
+//        printf("Systime: %ld\n", systime);
+
 	}
 }
 
 void threadedSerial::draw()
 {
-	double x1 = 10;
-	double yy = 74;
-    double y1 = 37;
-    double y2 = 53;
-    double y3 = 69;
+	double x1 = 10; // left border for left sliders
+    double x2 = x1 + 110; // left border for right sliders
+	double yy = 74; // top border for text display
+    int textLineHeight = 16;
+    double y1 = 16; // top border for top sliders (x)
+    double y2 = y1 + textLineHeight; // top border for middle sliders (y)
+    double y3 = y2 + textLineHeight; // top border for bottom sliders (z)
     double accelScale = 0.25;
     double gyroScale = 0.02;
 	
 	if( lock() ) {
 		if (status == 1) {
 
+            // text display
             ofSetColor(0, 0, 0, 255);
-            TTF.drawString( "quaternion " + ofToString( quaternion[0], 6) + " " + ofToString( quaternion[1], 6) + " " +  ofToString( quaternion[2], 6) + " " +  ofToString( quaternion[3], 6), x1, yy);
-            TTF.drawString( "accel " + ofToString( accel[0], 6) + " " + ofToString( accel[1], 6) + " " + ofToString( accel[2], 6), x1, yy + 16);
-            TTF.drawString(  "gyro   " +  ofToString( gyro[0], 6) + " " + ofToString( gyro[1], 6) + " " + ofToString( gyro[2], 6), x1, yy + 32);
-            
-            
-            TTF.drawString( "euler " + ofToString( euler[0] * RAD_TO_DEG ) + " " + ofToString( euler[1] * RAD_TO_DEG )+ " " + ofToString( euler[2] * RAD_TO_DEG ), x1 + 200, yy + 16);
-            TTF.drawString( "ypr " + ofToString( ypr[0] * RAD_TO_DEG ) + " " + ofToString( ypr[1] * RAD_TO_DEG ) + " " + ofToString( ypr[2] * RAD_TO_DEG ), x1 + 200, yy + 32);
+            TTF.drawString( "quaternion " + ofToString(quaternion[0], 6) + " " + ofToString(quaternion[1], 6) + " " +  ofToString(quaternion[2], 6) + " " +  ofToString(quaternion[3], 6), x1, yy);
+            TTF.drawString( "accel " + ofToString(accel[0], 5) + " " + ofToString(accel[1], 5) + " " + ofToString( accel[2], 5), x1, yy + textLineHeight);
+            TTF.drawString(  "gyro   " +  ofToString(gyro[0], 5) + " " + ofToString(gyro[1], 5) + " " + ofToString( gyro[2], 5), x1, yy + 2*textLineHeight);
+            TTF.drawString( "joystick " + ofToString(joystick[0]) + " " + ofToString(joystick[1]) + " " + ofToString(joystick[2]), x1, yy + 3*textLineHeight);
+            TTF.drawString( "euler " + ofToString(euler[0] * RAD_TO_DEG) + " " + ofToString(euler[1] * RAD_TO_DEG)+ " " + ofToString(euler[2] * RAD_TO_DEG), x1 + 200, yy + textLineHeight);
+            TTF.drawString( "ypr " + ofToString(ypr[0] * RAD_TO_DEG) + " " + ofToString(ypr[1] * RAD_TO_DEG) + " " + ofToString(ypr[2] * RAD_TO_DEG), x1 + 200, yy + 2*textLineHeight);
+            TTF.drawString( "trackball " + ofToString(trackball[0]) + " " + ofToString(trackball[1]) + " " + ofToString(trackball[2]), x1 + 200, yy + 3*textLineHeight);
            
             ofPushMatrix();
-            ofTranslate(0, 80);
+            ofTranslate(0, yy + (3*textLineHeight));
             
-            ofNoFill();
+            // sliders for accel & gyro display
+            ofNoFill(); // rectangles
             ofSetColor(91, 91, 91, 255);
-            ofRect(10, y1, 104, 12);
-            ofRect(10, y2, 104, 12);
-            ofRect(10, y3, 104, 12);
+            ofRect(x1, y1, 104, 12); // accel x
+            ofRect(x1, y2, 104, 12); // accel y
+            ofRect(x1, y3, 104, 12); // accel z
+            ofRect(x2, y1, 104, 12); // gyro x
+            ofRect(x2, y2, 104, 12); // gyro y
+            ofRect(x2, y3, 104, 12); // gyro z
             
-            ofRect(120, y1, 104, 12);
-            ofRect(120, y2, 104, 12);
-            ofRect(120, y3, 104, 12);
-            
-            ofFill();
+            ofFill(); // cursors
             ofSetColor(0, 0, 0, 255);
             ofRect( x1 + (52 + (52 * accelScale * accel[0])), y1, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[1])), y2, 2, 12);
             ofRect( x1 + (52 + (52 * accelScale * accel[2])), y3, 2, 12);
+            ofRect( x2 + (52 + (52 * gyroScale * gyro[0])), y1, 2, 12);
+            ofRect( x2 + (52 + (52 * gyroScale * gyro[1])), y2, 2, 12);
+            ofRect( x2 + (52 + (52 * gyroScale * gyro[2])), y3, 2, 12);
             
-            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[0])), y1, 2, 12);
-            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[1])), y2, 2, 12);
-            ofRect( x1 + 110 + (52 + (52 * gyroScale * gyro[2])), y3, 2, 12);
-            
-            ofNoFill();
+            ofNoFill(); // middle lines
             ofSetColor(91, 91, 91, 255);
-            
             ofLine(x1 + 52, y1, x1 + 52, y1 + 11);
             ofLine(x1 + 52, y2, x1 + 52, y2 + 11);
             ofLine(x1 + 52, y3, x1 + 52, y3 + 11);
+            ofLine(x2 + 52, y1, x2 + 52, y1 + 11);
+            ofLine(x2 + 52, y2, x2 + 52, y2 + 11);
+            ofLine(x2 + 52, y3, x2 + 52, y3 + 11);
             
-            ofLine(x1 + 162, y1, x1 + 162, y1 + 11);
-            ofLine(x1 + 162, y2, x1 + 162, y2 + 11);
-            ofLine(x1 + 162, y3, x1 + 162, y3 + 11);
+            // calibrate button
+            ofFill();
+            if(!calibrateMag) {
+                ofSetColor(232, 232, 232);
+            } else {
+                ofSetColor(255, 150, 0);
+            }
+            ofRect(x2+110, y2, 12, 12);
+            ofNoFill();
+            ofSetColor(127, 127, 127);
+            ofRect(x2+110, y2, 12, 12);
+            ofSetColor(0, 0, 0);
+            TTF.drawString("C", x2+113, y2+10);
             
             ofPopMatrix();
             
             ofPushMatrix();
-            ofTranslate(320., 125., 0);
-            //
+            ofTranslate(320., (yy + 3*textLineHeight + 40), 0); // set drawing center point for cube
+            
+            // cube
             ofRotate( angleAxis[0] * RAD_TO_DEG, angleAxis[1], -angleAxis[3], angleAxis[2]);
-            ofScale(30., 10., 60.);
+//            ofRotate( angleAxis[0] * RAD_TO_DEG, -angleAxis[3], angleAxis[1], -angleAxis[2]);
+            ofScale(25., 5., 50.);
             drawCube();
             ofSetColor(255, 127, 0);
-            ofLine(0.0, 0.0, 0.0, 0.0, 0.0, -2.0);
+            ofLine(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
             
             ofPopMatrix();
         }
 		unlock();
 	}
 }
+
 
 void threadedSerial::eulerToAngleAxis()
 {
@@ -445,8 +431,8 @@ void threadedSerial::eulerToAngleAxis()
     }
     angleAxis[0] = 2 * (float)acos((c1 * c2 * c3) - (s1 * s2 * s3));
     angleAxis[1] = x * f;
-    angleAxis[2] = y * f;
-    angleAxis[3] = z * f;
+    angleAxis[3] = y * f;
+    angleAxis[2] = z * f;
 }
 
 void threadedSerial::quatToAngleAxis()
@@ -465,29 +451,15 @@ void threadedSerial::quatToAngleAxis()
 
 void threadedSerial::quatToEuler()
 {
-
-//    // get quaternion from data packet
-//    quaternion[0] = ((packet[2] << 8) | packet[3]) / 16384.0f;
-//    quaternion[1] = ((packet[4] << 8) | packet[5]) / 16384.0f;
-//    quaternion[2] = ((packet[6] << 8) | packet[7]) / 16384.0f;
-//    quaternion[3] = ((packet[8] << 8) | packet[9]) / 16384.0f;
-    
     double gravity[3];
     double test = quaternion[1] * quaternion[2] + quaternion[3] * quaternion[0];
     
-//    for (int i = 0; i < 4; i++) {
-//        if (quaternion[i] >= 2) quaternion[i] = -4 + quaternion[i];
-//    }
-
     // calculate gravity vector
     gravity[0] = 2 * (quaternion[1] * quaternion[3] - quaternion[0] * quaternion[2]);
     gravity[1] = 2 * (quaternion[0] * quaternion[1] + quaternion[2] * quaternion[3]);
     gravity[2] = quaternion[0] * quaternion[0] - quaternion[1] * quaternion[1] - quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3];
 
     // calculate Euler angles
-//    euler[0] = atan2(2 * quaternion[1] * quaternion[2] - 2 * quaternion[0] * quaternion[3], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[1] * quaternion[1] - 1);
-//    euler[1] = -asin(2 * quaternion[1] * quaternion[3] + 2 * quaternion[0] * quaternion[2]);
-//    euler[2] = atan2(2 * quaternion[2] * quaternion[3] - 2 * quaternion[0] * quaternion[1], 2 * quaternion[0] * quaternion[0] + 2 * quaternion[3] * quaternion[3] - 1);
     if(test > 0.499) {
         euler[0] = 2 * atan2(quaternion[1], quaternion[0]);
         euler[1] = PI * 0.5;
@@ -556,27 +528,52 @@ void threadedSerial::drawCube()
     
     float a = 0.8f;	// alpha
     
+    
     // FRONT AND BACK
-    glColor4f(1.0f, 0.0f, 0.0f, a );
+    if(!calibrateMag) {
+        glColor4f(1.0f, 0.0f, 0.0f, a);
+    } else {
+        glColor4f(1.0f,0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, 0.0f, 1.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glColor4f(1.0f, 0.5f, 0.0f, a );
+    if(!calibrateMag) {
+        glColor4f(1.0f, 0.5f, 0.0f, a );
+    } else {
+        glColor4f(1.0f, 0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, 0.0f, -1.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
     
     // LEFT AND RIGHT
-    glColor4f(0.0f, 0.0f, 1.0f, a );
+    if(!calibrateMag) {
+        glColor4f(0.0f, 0.0f, 1.0f, a);
+    } else {
+        glColor4f(1.0f,0.5f, 0.0f, a);
+    }
     glNormal3f(-1.0f, 0.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
-    glColor4f(0.0f, 0.5f, 1.0f, a );
+    if(!calibrateMag) {
+        glColor4f(0.0f, 0.5f, 1.0f, a );
+    } else {
+        glColor4f(1.0f, 0.5f, 0.0f, a);
+    }
     glNormal3f(1.0f, 0.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
     
     // TOP AND BOTTOM
-    glColor4f(0.0f, 0.85f, 0.0f, a );
+    if(!calibrateMag) {
+        glColor4f(0.0f, 0.85f, 0.0f, a);
+    } else {
+        glColor4f(1.0f,0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, 1.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
-    glColor4f(1.0f, 0.0f, 1.0f, a );
+    if(!calibrateMag) {
+        glColor4f(1.0f, 0.0f, 1.0f, a );
+    } else {
+        glColor4f(1.0f, 0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, -1.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 }

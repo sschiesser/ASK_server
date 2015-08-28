@@ -28,6 +28,8 @@ void testApp::setup()
 	windowChanged = 1;
 	drawValues = 0;
 	menuState = 0;
+    calibrateMag = 0;
+    serialThreadObject->calibrateMag = false;
 	
 	serialThreadObject->serialport = "/dev/tty.usbserial-A7005Ghs";
 	serialThreadObject->baudrate = 115200;
@@ -62,9 +64,10 @@ void testApp::setup()
 	// redrawInterval = redrawValues[display]; // in seconds
 	firstflag = 1;
     
-    serialThreadObject->switchValue = 0;
-    serialThreadObject->oldSwitchValue = 0;
-    serialThreadObject->switchValueChanged = false;
+    serialThreadObject->oldJoySw = 0;
+    serialThreadObject->oldTbSw = 0;
+    serialThreadObject->joySwChanged = false;
+    serialThreadObject->tbSwChanged = false;
 	
 	runOnce = 1;
 	runOnceDelay = 1.0f;
@@ -89,29 +92,27 @@ void testApp::update()
 void testApp::draw()
 {
 	int i;
-	int anchorx = 15;
-	int anchory = 74;	
+	int anchorx = 10;
+	int anchory = 74;
 	int stepsize = 16;
 	int columnwidth = 200;
 	int rightColumn = 295;
 	int leftColumn = 105;
-	int width;
-	int height;
+    int width;
+    int height;
 	double yy;
 	
 	if(windowChanged == 1) {
 		if(drawValues == 0) {
 			width = 430;
 			height = 60;
-			ofSetWindowShape(width, height);
-			windowChanged = 0;
 		} else if(drawValues == 1) {
 			width = 430;
-			height = 180;
+			height = 200;
 			timeOut = 5.0;
-			ofSetWindowShape(width, height);
-			windowChanged = 0;
 		}
+        ofSetWindowShape(width, height);
+        windowChanged = 0;
 	}
 	
 	if(redrawFlag == 1) // drawn once after first update
@@ -120,8 +121,8 @@ void testApp::draw()
 		ofRect(0, 0, width, height);
 		ofSetColor(0, 0, 0, 255);
 
-		TTF.drawString(status1, anchorx, 26);
-		TTF.drawString(status2, anchorx,  48);
+		TTF.drawString(status1, anchorx, 26); // "Device open"
+		TTF.drawString(status2, anchorx,  48); // "Sending to port..."
 		
 		ofSetColor(250, 250, 250, 255);
 		
@@ -168,8 +169,9 @@ void testApp::draw()
 		ofRect(rightColumn, 33, 124, 20);
 		ofSetColor(0, 0, 0);		
 		TTFsmall.drawString("Show Values", rightColumn+28, 48);
-		
-		texScreen.loadScreenData(0,0, 440, 440);
+        
+        
+        texScreen.loadScreenData(0,0, 440, 440);
 		drawTex = true;
 	} else {
 		if(drawTex) {
@@ -499,6 +501,7 @@ void testApp::resetCalibrate()
 
 }
 
+
 void testApp::keyReleased(int key)
 {
 	switch(key){
@@ -562,6 +565,23 @@ void testApp::mousePressed(int x, int y, int button)
 		windowChanged = 1;
 		redrawFlag = 1;
 	}
+    
+    // clic in calibrate button
+    if(x > 230 && x < 242 && y > 155 && y < 167) {
+        if(calibrateMag != 0) {
+            calibrateMag = 0;
+            serialThreadObject->calibrateMag = false;
+            printf("Exiting calibration mode\n");
+            serialThreadObject->writeCalibByte('s');
+        } else {
+            calibrateMag = 1;
+            serialThreadObject->calibrateMag = true;
+            printf("Entering calibration mode\n");
+            serialThreadObject->writeCalibByte('c');
+            serialThreadObject->status = 1;
+        }
+    }
+    
 	// click in menu-original-textbox
 	if(x > 105 && x < 293 && y > 13 && y < 31) {
 		if(menuState != 0) {

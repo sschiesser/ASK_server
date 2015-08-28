@@ -31,6 +31,8 @@ public:
 	void readAxistable();
 	
 	void resetCalibrate();
+    void startCalibrateMag();
+    void stopCalibrateMag();
 
 	void writeScaling();
 
@@ -69,6 +71,7 @@ public:
 
 	bool	senderStatus;
 	bool	drawValues;
+    bool    calibrateMag;
 
 	float	timeOut;
 	float	lastTime;
@@ -87,6 +90,4 @@ public:
 	bool	menuState;
 	int		numMenuItems;
 	ofPoint menuClickPos;
-	
-		
 };
