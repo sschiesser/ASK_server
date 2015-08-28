@@ -74,6 +74,11 @@ void threadedSerial::readSerial()
 	}
 }
 
+void threadedSerial::writeCalibByte(unsigned char byte)
+{
+    serial.writeByte(byte);
+}
+
 void threadedSerial::serialparse(unsigned char *c)
 {
 	int i, j;
@@ -373,6 +378,20 @@ void threadedSerial::draw()
             ofLine(x2 + 52, y2, x2 + 52, y2 + 11);
             ofLine(x2 + 52, y3, x2 + 52, y3 + 11);
             
+            // calibrate button
+            ofFill();
+            if(!calibrateMag) {
+                ofSetColor(232, 232, 232);
+            } else {
+                ofSetColor(255, 150, 0);
+            }
+            ofRect(x2+110, y2, 12, 12);
+            ofNoFill();
+            ofSetColor(127, 127, 127);
+            ofRect(x2+110, y2, 12, 12);
+            ofSetColor(0, 0, 0);
+            TTF.drawString("C", x2+113, y2+10);
+            
             ofPopMatrix();
             
             ofPushMatrix();
@@ -391,6 +410,7 @@ void threadedSerial::draw()
 		unlock();
 	}
 }
+
 
 void threadedSerial::eulerToAngleAxis()
 {
@@ -508,27 +528,52 @@ void threadedSerial::drawCube()
     
     float a = 0.8f;	// alpha
     
+    
     // FRONT AND BACK
-    glColor4f(1.0f, 0.0f, 0.0f, a );
+    if(!calibrateMag) {
+        glColor4f(1.0f, 0.0f, 0.0f, a);
+    } else {
+        glColor4f(1.0f,0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, 0.0f, 1.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glColor4f(1.0f, 0.5f, 0.0f, a );
+    if(!calibrateMag) {
+        glColor4f(1.0f, 0.5f, 0.0f, a );
+    } else {
+        glColor4f(1.0f, 0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, 0.0f, -1.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
     
     // LEFT AND RIGHT
-    glColor4f(0.0f, 0.0f, 1.0f, a );
+    if(!calibrateMag) {
+        glColor4f(0.0f, 0.0f, 1.0f, a);
+    } else {
+        glColor4f(1.0f,0.5f, 0.0f, a);
+    }
     glNormal3f(-1.0f, 0.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
-    glColor4f(0.0f, 0.5f, 1.0f, a );
+    if(!calibrateMag) {
+        glColor4f(0.0f, 0.5f, 1.0f, a );
+    } else {
+        glColor4f(1.0f, 0.5f, 0.0f, a);
+    }
     glNormal3f(1.0f, 0.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
     
     // TOP AND BOTTOM
-    glColor4f(0.0f, 0.85f, 0.0f, a );
+    if(!calibrateMag) {
+        glColor4f(0.0f, 0.85f, 0.0f, a);
+    } else {
+        glColor4f(1.0f,0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, 1.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
-    glColor4f(1.0f, 0.0f, 1.0f, a );
+    if(!calibrateMag) {
+        glColor4f(1.0f, 0.0f, 1.0f, a );
+    } else {
+        glColor4f(1.0f, 0.5f, 0.0f, a);
+    }
     glNormal3f(0.0f, -1.0f, 0.0f);
     glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 }

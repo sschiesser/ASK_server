@@ -33,6 +33,7 @@ public:
 	void stop();
 	void threadedFunction();
     void readSerial();
+    void writeCalibByte(unsigned char byte);
 	void serialparse(unsigned char *c);
     void parsePacket();
     
@@ -78,6 +79,7 @@ public:
 	int			display;
 	bool		windowChanged;
     bool        drawValues;
+    bool        calibrateMag;
 	
 	// OSC sender stuff
 	string		mpuaddresses[24];
