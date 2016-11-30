@@ -344,7 +344,8 @@ void threadedSerial::draw()
             TTF.drawString(  "gyro   " +  ofToString(gyro[0], 5) + " " + ofToString(gyro[1], 5) + " " + ofToString( gyro[2], 5), x1, yy + 2*textLineHeight);
             TTF.drawString( "joystick " + ofToString(joystick[0]) + " " + ofToString(joystick[1]) + " " + ofToString(joystick[2]), x1, yy + 3*textLineHeight);
             TTF.drawString( "euler " + ofToString(euler[0] * RAD_TO_DEG) + " " + ofToString(euler[1] * RAD_TO_DEG)+ " " + ofToString(euler[2] * RAD_TO_DEG), x1 + 200, yy + textLineHeight);
-            TTF.drawString( "ypr " + ofToString(ypr[0] * RAD_TO_DEG) + " " + ofToString(ypr[1] * RAD_TO_DEG) + " " + ofToString(ypr[2] * RAD_TO_DEG), x1 + 200, yy + 2*textLineHeight);
+//            TTF.drawString( "ypr " + ofToString(ypr[0] * RAD_TO_DEG) + " " + ofToString(ypr[1] * RAD_TO_DEG) + " " + ofToString(ypr[2] * RAD_TO_DEG), x1 + 200, yy + 2*textLineHeight);
+            TTF.drawString( "ypr " + ofToString(ypr[0]) + " " + ofToString(ypr[1]) + " " + ofToString(ypr[2]), x1 + 200, yy + 2*textLineHeight);
             TTF.drawString( "trackball " + ofToString(trackball[0]) + " " + ofToString(trackball[1]) + " " + ofToString(trackball[2]), x1 + 200, yy + 3*textLineHeight);
            
             ofPushMatrix();
